@@ -19,7 +19,6 @@
           router-link
           to="/"
         >
-        {{item}}
         [{{item.category}}] {{ item.groupName }} 
           <!-- <router-link to="/">이름: {{ item }}</router-link> -->
         </li>
@@ -109,4 +108,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 @import "https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css";
+#div{
+  text-align: center;
+}
 </style>
