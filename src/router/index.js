@@ -9,7 +9,7 @@ export default new Router({
   routes: [
     {
       path: "/vue-home",
-      name: "home",
+      name: "ViewHome",
       component: () => import("@/views/Home"),
     },
     {
@@ -37,18 +37,23 @@ export default new Router({
       path: "/group",
       name: "group",
       // component: `${BASE_URL.group}/group`,
-      beforeEnter() {window.location.href =`${BASE_URL.group}/group`}
+      beforeEnter() {window.location.href =`${BASE_URL.react}/enter/group/${sessionStorage.getItem("userId")}`}
     },
     {
       path: "/lecture",
       name: "lecture",
       // component: `${BASE_URL.lecture}/lecture`,
-      beforeEnter() {window.location.href =`${BASE_URL.lecture}/lecture`}
+      beforeEnter() {window.location.href =`${BASE_URL.react}/enter/lecture/${sessionStorage.getItem("userId")}`}
     },
     {
       path: "/mypage",
       name: "mypage",
-      beforeEnter() {window.location.href =`${BASE_URL.mypage}/mypage`}
+      beforeEnter() {window.location.href =`${BASE_URL.react}/enter/mypage/${sessionStorage.getItem("userId")}`}
+    },
+    {
+      path: "/home",
+      name: "home",
+      beforeEnter() {window.location.href =`${BASE_URL.react}/enter/home/${sessionStorage.getItem("userId")}`}
     },
   ],
 });
