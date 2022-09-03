@@ -25,7 +25,7 @@ export default {
     
     sessionStorage.setItem("userId", this.$route.params.id)
 
-    this.$axios.get(`${this.$BASE_URL.chatting}/users/${userId}`, {
+    this.$axios.get(`${this.$BASE_URL.chatting}/users/search/findByUserId?userId=${userId}`, {
         headers: {
         Authorization: sessionStorage.getItem("userId")
         }
