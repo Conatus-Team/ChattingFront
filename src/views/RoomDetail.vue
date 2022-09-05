@@ -19,6 +19,7 @@
           class="chat__body"
           id="chat__body"
           @scroll="handleNotificationListScroll"
+          ref="toolbarChat"
         >
 
           <!-- 
@@ -132,7 +133,7 @@ export default {
     };
   },
   mounted() {
-    this.scrollDown();
+
     this.findChatDataHistory();
     this.scrollDown();
     console.log(HOST);
@@ -157,6 +158,7 @@ export default {
       setTimeout(() => {
         const element = document.getElementById("chat__body");
         element.scrollTop = element.scrollHeight;
+
       }, 0);
 
       // // 스크롤 아래로 (바로)
@@ -183,8 +185,12 @@ export default {
 
           });
           console.log(this.messages);
-          this.scrollDown()
 
+          setTimeout(() => {
+            const element = document.getElementById("chat__body");
+            element.scrollTop = element.scrollHeight;
+            this.useScrollListener= true
+          }, 10);
 
         });
     },
@@ -273,13 +279,13 @@ export default {
     },
     handleNotificationListScroll(e) {
       if (!this.useScrollListener) return;
-      // const { scrollHeight, scrollTop, clientHeight } = e.target;
-      const { scrollTop, scrollHeight } = e.target;
-      // const isAtTheBottom = scrollHeight === scrollTop + clientHeight;
+      const { scrollHeight, scrollTop, clientHeight } = e.target;
+      // const { scrollTop, scrollHeight } = e.target;
+      const isAtTheBottom = scrollHeight === scrollTop + clientHeight;
       // // 일정 한도 밑으로 내려오면 함수 실행
-      // if (isAtTheBottom) this.handleLoadMore();
+      if (isAtTheBottom) this.handleLoadMore();
 
-      console.log(`${scrollTop}, ${scrollHeight}`);
+      // console.log(`${scrollTop}, ${scrollHeight}`);
       const isAtTop = scrollTop === 0;
 
       if (isAtTop && this.last !== true) {
@@ -289,7 +295,7 @@ export default {
         this.$axios
           .get(
             // `http://localhost:8080/chat/data/get/pagesort?page=${this.page}&size=${this.size}`
-            `http://localhost:8080/chat/data/room/?roomId=${this.roomId}&page=${this.page}&size=${this.size}&sortOrder=${this.sortDirection}`
+            `${HOST}/chat/message/pagesort?roomId=${this.roomId}&page=${this.page}&size=${this.size}&sortOrder=${this.sortDirection}`
           )
           .then((response) => {
             console.log("axios response");
@@ -299,12 +305,39 @@ export default {
             this.last = response.data.last;
             // console.log(content);
             // this.messages = lodash.cloneDeep(content);
-            content.map((item) => {
-              this.messages.unshift({ nickname: item.nickname, message: item.question });
-            });
+
+
+
+            // content.map((item) => {
+            //   console.log({ nickname: item.nickname, message: item.message })
+            //   this.messages.unshift({ nickname: item.nickname, message: item.message });
+            // });
+            for (let i = 0; i < content.length; i++){
+              console.log(i)
+              this.messages.unshift({ nickname: content[i].nickname, message: content[i].message });
+            }
+            console.log("스크롤")
+            // setTimeout(() => {
+            //   const element = document.getElementById("chat__body");
+            //   element.scrollTop = element.scrollHeight- scrollHeight;
+            // }, 0);
             const element = document.getElementById("chat__body");
-            element.scrollTop = element.scrollHeight - scrollHeight;
-            setTimeout(() => {}, 0);
+            // element.scrollTop = element.scrollHeight - scrollHeight;
+            // setTimeout(() => {}, 0);
+            // this.$refs.toolbarChat.scrollTop = element.scrollHeight - scrollHeight;
+            // this.$el.scrollTop = element.scrollHeight - scrollHeight;
+
+            
+        //     this.$refs.scrollTo(element.scrollHeight - scrollHeight, {duration:0});
+            this.$nextTick(() => {
+            // this.$refs.toolbarChat.scrollTop = element.scrollHeight - scrollHeight;
+            // document.getElementById("chat__body").scrollIntoView({behavior: "auto", block: "end", inline: "nearest"});
+            document.getElementById("chat__body").scrollTo({
+            top: element.scrollHeight - scrollHeight,
+            left: 0,
+            behavior: 'instant'
+          });
+        });
           });
       }
     },

@@ -27,9 +27,9 @@
       </div> -->
       <div>
         <div class = "chat__yourmessage">
-          <div class="chat__yourmessage__user" v-if="!isSame">
+          <div class="chat__yourmessage__user" v-if="!isSamePerson(msg, prev)">
           <p >
-            {{ msg.nickname }}
+            {{ msg.nickname }} 
           </p>
         </div>
           <div class="chat__yourmessage__p">
@@ -57,7 +57,8 @@ export default {
   },
   methods: {
     isSamePerson(msg, prev) {
-      if (prev === null) {
+
+      if (prev[0] === null) {
         return false;
       } else if (prev[0]?.nickname == msg?.nickname) {
         return true;
@@ -68,11 +69,14 @@ export default {
   },
   created() {
     this.userNickname = sessionStorage.getItem("userNickname");
+
     this.isSame = this.isSamePerson(this.msg, this.prev);
     // if (this.msg?.from.avatar) {
     //   this.avatar = this.msg?.from.avatar;
     // }
   },
+  mounted(){
+  }
 };
 </script>
 
@@ -124,10 +128,10 @@ export default {
   font-size: 23px;
   font-weight: 700;
   color: #292929;
-  margin-top: 0;
+  margin-top: 20px;
 
   float: left;
-  margin-bottom: 0px;
+  margin-bottom: -20px;
 }
 
 .chat__yourmessage__p {
