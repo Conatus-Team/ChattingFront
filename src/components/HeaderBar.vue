@@ -63,6 +63,7 @@ header {
   align-items: center;
   border-bottom: 1px solid #e2e2e2;
   background-color: #64c964;
+  margin-bottom: 10px;
 }
 
 header > div {
@@ -75,6 +76,7 @@ header > div {
   font-size: 25px;
   cursor: pointer;
   justify-content: center;
+  
 
 }
 #home {

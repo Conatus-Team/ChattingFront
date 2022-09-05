@@ -26,17 +26,20 @@
         />
       </div> -->
       <div>
-        <div>
-          <p class="chat__yourmessage__user" v-if="!isSame">
+        <div class = "chat__yourmessage">
+          <div class="chat__yourmessage__user" v-if="!isSame">
+          <p >
             {{ msg.nickname }}
           </p>
         </div>
-        <div class="chat__yourmessage__p">
+          <div class="chat__yourmessage__p">
           <p class="chat__yourmessage__paragraph">
             {{ msg.message }}
           </p>
           <!-- <p class="chat__yourmessage__time">23:38</p> -->
         </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -88,10 +91,10 @@ export default {
   border-radius: 20px 20px 0px 20px;
   /* max-width: 180px; */
   max-width: 40rem;
-  background-color: #bbc4ef;
+  background-color: #27877f;
   color: #ffffff;
   padding: 0.8rem;
-  font-size: 14px;
+  font-size: 23px;
 }
 
 .chat__first {
@@ -100,6 +103,7 @@ export default {
 
 .chat__yourmessage {
   display: flex;
+  flex-direction: column;
 }
 
 .chat__yourmessage__avartar {
@@ -115,19 +119,22 @@ export default {
 }
 
 .chat__yourmessage__user {
-  font-size: 14px;
+  display: flex;
+  
+  font-size: 23px;
   font-weight: 700;
   color: #292929;
   margin-top: 0;
-  margin-block-end: 0rem;
+
   float: left;
+  margin-bottom: 0px;
 }
 
 .chat__yourmessage__p {
   display: flex;
   align-items: flex-end;
   line-break: anywhere;
-  margin-top: 22px;
+  /* margin-top: 22px; */
 }
 
 .chat__yourmessage__paragraph {
@@ -138,7 +145,8 @@ export default {
   max-width: 40rem;
   color: #414141;
   padding: 0.8rem;
-  font-size: 14px;
+  font-size: 23px;
+  /* margin-top:1px; */
 }
 
 .chat__yourmessage__time {
