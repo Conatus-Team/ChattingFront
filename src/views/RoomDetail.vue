@@ -1,10 +1,11 @@
 <template>
-  <div>
-    <div>
-      <HeaderBar title="그룹 채팅방" />
-    </div>
+  <div v-cloak class="chatting_background">
 
-    <div class="container" id="app" v-cloak>
+
+    <div class="my-container" id="app" v-cloak>
+      <div>
+        <HeaderBar title="그룹 채팅방" />
+     </div>
       <div class="chat">
 
         <div class="chat__header">
@@ -23,7 +24,7 @@
           <!-- 
           지난 채팅메시지 더 불러오기-->
           <div v-if="this.last === true">
-            <p>이전 내역이 없습니다</p>
+            <p> </p>
           </div>
 
           <chat-message
@@ -116,7 +117,7 @@ export default {
       messages: [],
       userId: 0,
 
-      size: 100,
+      size: 10,
       page: 0,
       first: true,
       last: false,
@@ -133,7 +134,7 @@ export default {
   mounted() {
     this.scrollDown();
     this.findChatDataHistory();
-
+    this.scrollDown();
     console.log(HOST);
     sock = new SockJS(`${HOST}/ws/chat`);
     ws = Stomp.over(sock);
@@ -152,11 +153,15 @@ export default {
 
   methods: {
     scrollDown() {
-      // 스크롤 아래로
+      // 스크롤 아래로 (부드럽게)
       setTimeout(() => {
         const element = document.getElementById("chat__body");
         element.scrollTop = element.scrollHeight;
       }, 0);
+
+      // // 스크롤 아래로 (바로)
+      // const element = document.getElementById("chat__body");
+      // element.scrollTop = element.scrollHeight;
     },
     findChatDataHistory() {
       this.$axios
@@ -174,9 +179,11 @@ export default {
           // this.messages = lodash.cloneDeep(content);
           content.map((item) => {
             this.messages.unshift({ nickname: item.nickname, message: item.message });
+
+
           });
           console.log(this.messages);
-          this.scrollDown();
+          this.scrollDown()
 
 
         });
@@ -185,10 +192,11 @@ export default {
       console.log(`recvMessage:`)
       console.log(recv)
 
+      if (recv.type !== "ENTER")
       this.messages.push({
         type: recv.type,
         nickname: recv.type === "ENTER" ? "[알림]" : recv.nickname,
-        message: recv.message,
+        message: recv.type === "ENTER" ? "" : recv.message,
       });
 
       //   this.messages.push({
@@ -307,6 +315,10 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 @import "https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css";
+[v-cloak] {
+  display: none;
+}
+
 li {
   text-align: left;
 }
@@ -329,6 +341,8 @@ li {
 
 /* 채팅 바디 */
 .chat {
+  
+  
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -352,12 +366,13 @@ li {
 }
 
 .chat__header {
-  background: #ffffff;
+  background: #fdfdff;
   box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.05);
   border-radius: 24px 24px 0px 0px;
-  padding: 1.8rem;
-  font-size: 16px;
+  padding: 1.2rem;
+  font-size: 25px;
   font-weight: 700;
+  
 }
 
 .chat__header__greetings {
@@ -377,7 +392,7 @@ li {
 .form__input {
   border: none;
   padding: 0.5rem;
-  font-size: 16px;
+  font-size: 23px;
   width: calc(100% - 60px);
 }
 
@@ -397,5 +412,33 @@ svg {
 
 svg:hover {
   fill: #999999;
+}
+
+.my-container{
+  margin: auto;
+}
+@media (min-width: 800px){ /*if size> 650 do*/
+  .my-container{
+    width:800px;
+    
+  }
+  .chat{
+    height: 600px
+  }
+}
+
+@media (min-width: 1400px){ /*if size> 650 do*/
+  .my-container{
+    width:1350px;
+  }
+  .chat{
+    height: 700px
+  }
+}
+
+@media (max-width:650px){
+  .my-container{
+    width:90vw;
+  }
 }
 </style>
