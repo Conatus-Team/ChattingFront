@@ -1,11 +1,12 @@
 <template>
   <div>
-    <HeaderBar title="채팅방 리스트" />
+    
 
-    <div class="container" id="app" v-cloak>
+    <div class="my-container" id="app" v-cloak>
+      <HeaderBar title="채팅방 리스트" />
       <div class="row">
-        <div class="col-md-12">
-          <h3>채팅방 리스트</h3>
+        <div class="title">
+          <h1>채팅방 리스트</h1>
         </div>
       </div>
 
@@ -110,5 +111,40 @@ export default {
 @import "https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css";
 #div{
   text-align: center;
+}
+.container{
+  width: 1400px;
+  margin:auto;
+}
+
+.title{
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
+
+.list-group{
+  font-size: 23px
+}
+
+.my-container{
+  margin: auto;
+}
+@media (min-width: 800px){ /*if size> 650 do*/
+  .my-container{
+    width:800px;
+    
+  }
+}
+
+@media (min-width: 1400px){ /*if size> 650 do*/
+  .my-container{
+    width:1350px;
+  }
+}
+
+@media (max-width:650px){
+  .my-container{
+    width:90vw;
+  }
 }
 </style>

@@ -1,10 +1,11 @@
 <template>
-  <div>
-    <div>
-      <HeaderBar title="그룹 채팅방" />
-    </div>
+  <div v-cloak class="chatting_background">
 
-    <div class="container" id="app" v-cloak>
+
+    <div class="my-container" id="app" v-cloak>
+      <div>
+        <HeaderBar title="그룹 채팅방" />
+     </div>
       <div class="chat">
 
         <div class="chat__header">
@@ -18,12 +19,13 @@
           class="chat__body"
           id="chat__body"
           @scroll="handleNotificationListScroll"
+          ref="toolbarChat"
         >
 
           <!-- 
           지난 채팅메시지 더 불러오기-->
           <div v-if="this.last === true">
-            <p>이전 내역이 없습니다</p>
+            <p>채팅방이 생성되었습니다</p>
           </div>
 
           <chat-message
@@ -116,7 +118,7 @@ export default {
       messages: [],
       userId: 0,
 
-      size: 100,
+      size: 10,
       page: 0,
       first: true,
       last: false,
@@ -131,9 +133,9 @@ export default {
     };
   },
   mounted() {
-    this.scrollDown();
-    this.findChatDataHistory();
 
+    this.findChatDataHistory();
+    this.scrollDown();
     console.log(HOST);
     sock = new SockJS(`${HOST}/ws/chat`);
     ws = Stomp.over(sock);
@@ -141,7 +143,13 @@ export default {
   },
   async created() {
     this.roomId = this.$route.params.roomId;
-    this.groupName = this.$route.params.groupName;
+    this.groupName = this.$route.params.groupName;  
+    if (!this.groupName ){
+      this.getGroupName()
+    }
+
+
+
 
     this.userId = sessionStorage.getItem("userId");
     if (this.$route.params.nickname) {
@@ -151,12 +159,27 @@ export default {
   },
 
   methods: {
+    getGroupName(){
+      this.$axios
+        .get(
+          // `http://localhost:8080/chat/data/get/pagesort?page=${this.page}&size=${this.size}`
+          `${HOST}/chattingRooms/${this.roomId}`
+        )
+        .then((response) => {
+          this.groupName = response.data.groupName;
+        })
+    },
     scrollDown() {
-      // 스크롤 아래로
+      // 스크롤 아래로 (부드럽게)
       setTimeout(() => {
         const element = document.getElementById("chat__body");
         element.scrollTop = element.scrollHeight;
+
       }, 0);
+
+      // // 스크롤 아래로 (바로)
+      // const element = document.getElementById("chat__body");
+      // element.scrollTop = element.scrollHeight;
     },
     findChatDataHistory() {
       this.$axios
@@ -174,10 +197,16 @@ export default {
           // this.messages = lodash.cloneDeep(content);
           content.map((item) => {
             this.messages.unshift({ nickname: item.nickname, message: item.message });
+
+
           });
           console.log(this.messages);
-          this.scrollDown();
 
+          setTimeout(() => {
+            const element = document.getElementById("chat__body");
+            element.scrollTop = element.scrollHeight;
+            this.useScrollListener= true
+          }, 10);
 
         });
     },
@@ -185,10 +214,11 @@ export default {
       console.log(`recvMessage:`)
       console.log(recv)
 
+      if (recv.type !== "ENTER")
       this.messages.push({
         type: recv.type,
         nickname: recv.type === "ENTER" ? "[알림]" : recv.nickname,
-        message: recv.message,
+        message: recv.type === "ENTER" ? "" : recv.message,
       });
 
       //   this.messages.push({
@@ -265,13 +295,13 @@ export default {
     },
     handleNotificationListScroll(e) {
       if (!this.useScrollListener) return;
-      // const { scrollHeight, scrollTop, clientHeight } = e.target;
-      const { scrollTop, scrollHeight } = e.target;
-      // const isAtTheBottom = scrollHeight === scrollTop + clientHeight;
+      const { scrollHeight, scrollTop, clientHeight } = e.target;
+      // const { scrollTop, scrollHeight } = e.target;
+      const isAtTheBottom = scrollHeight === scrollTop + clientHeight;
       // // 일정 한도 밑으로 내려오면 함수 실행
-      // if (isAtTheBottom) this.handleLoadMore();
+      if (isAtTheBottom) this.handleLoadMore();
 
-      console.log(`${scrollTop}, ${scrollHeight}`);
+      // console.log(`${scrollTop}, ${scrollHeight}`);
       const isAtTop = scrollTop === 0;
 
       if (isAtTop && this.last !== true) {
@@ -281,7 +311,7 @@ export default {
         this.$axios
           .get(
             // `http://localhost:8080/chat/data/get/pagesort?page=${this.page}&size=${this.size}`
-            `http://localhost:8080/chat/data/room/?roomId=${this.roomId}&page=${this.page}&size=${this.size}&sortOrder=${this.sortDirection}`
+            `${HOST}/chat/message/pagesort?roomId=${this.roomId}&page=${this.page}&size=${this.size}&sortOrder=${this.sortDirection}`
           )
           .then((response) => {
             console.log("axios response");
@@ -291,12 +321,39 @@ export default {
             this.last = response.data.last;
             // console.log(content);
             // this.messages = lodash.cloneDeep(content);
-            content.map((item) => {
-              this.messages.unshift({ nickname: item.nickname, message: item.question });
-            });
+
+
+
+            // content.map((item) => {
+            //   console.log({ nickname: item.nickname, message: item.message })
+            //   this.messages.unshift({ nickname: item.nickname, message: item.message });
+            // });
+            for (let i = 0; i < content.length; i++){
+              console.log(i)
+              this.messages.unshift({ nickname: content[i].nickname, message: content[i].message });
+            }
+            console.log("스크롤")
+            // setTimeout(() => {
+            //   const element = document.getElementById("chat__body");
+            //   element.scrollTop = element.scrollHeight- scrollHeight;
+            // }, 0);
             const element = document.getElementById("chat__body");
-            element.scrollTop = element.scrollHeight - scrollHeight;
-            setTimeout(() => {}, 0);
+            // element.scrollTop = element.scrollHeight - scrollHeight;
+            // setTimeout(() => {}, 0);
+            // this.$refs.toolbarChat.scrollTop = element.scrollHeight - scrollHeight;
+            // this.$el.scrollTop = element.scrollHeight - scrollHeight;
+
+            
+        //     this.$refs.scrollTo(element.scrollHeight - scrollHeight, {duration:0});
+            this.$nextTick(() => {
+            // this.$refs.toolbarChat.scrollTop = element.scrollHeight - scrollHeight;
+            // document.getElementById("chat__body").scrollIntoView({behavior: "auto", block: "end", inline: "nearest"});
+            document.getElementById("chat__body").scrollTo({
+            top: element.scrollHeight - scrollHeight,
+            left: 0,
+            behavior: 'instant'
+          });
+        });
           });
       }
     },
@@ -307,6 +364,10 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 @import "https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css";
+[v-cloak] {
+  display: none;
+}
+
 li {
   text-align: left;
 }
@@ -329,12 +390,14 @@ li {
 
 /* 채팅 바디 */
 .chat {
+  
+  
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 
   /* max-width: 375px; */
-  height: 45rem;
+  height: 375px;
   background-color: #ffffff;
   /* margin: 5rem auto 0rem; */
   border-radius: 1.5rem;
@@ -352,12 +415,13 @@ li {
 }
 
 .chat__header {
-  background: #ffffff;
+  background: #fdfdff;
   box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.05);
   border-radius: 24px 24px 0px 0px;
-  padding: 1.8rem;
-  font-size: 16px;
+  padding: 1.2rem;
+  font-size: 25px;
   font-weight: 700;
+  
 }
 
 .chat__header__greetings {
@@ -377,7 +441,7 @@ li {
 .form__input {
   border: none;
   padding: 0.5rem;
-  font-size: 16px;
+  font-size: 23px;
   width: calc(100% - 60px);
 }
 
@@ -397,5 +461,43 @@ svg {
 
 svg:hover {
   fill: #999999;
+}
+
+.my-container{
+  margin: auto;
+}
+
+/* 탭 */
+@media (min-width: 800px){ /*if size> 650 do*/
+  .my-container{
+    width:800px;
+    
+  }
+  .chat{
+    height: 90vh;
+  }
+}
+
+/* 웹 */
+@media (min-width: 1400px){ /*if size> 650 do*/
+  .my-container{
+    width:1350px;
+  }
+  .chat{
+    height: 90vh;
+  }
+}
+
+/* 모바일 */
+@media (max-width:650px){
+  .app{
+    width:100vw;
+  }
+  .my-container{
+    width:90vw;
+  }
+  .chat{
+    height: 90vh;
+  }
 }
 </style>

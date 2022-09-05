@@ -14,7 +14,14 @@ export default {
 #app {
   background-color: white;
   box-shadow: rgba(100,100,111,0.2) 0px 7px 29px 0px;
+  min-height: 100vh;
+  padding-left: 20px;
+  padding-right: 20px;
+  text-align: center;
+  font-family: 'Do Hyeon', sans-serif;
+  font-size: 23px;
 }
+
 
 @media (min-width: 800px){ /*if size> 650 do*/
   .app{

@@ -1,10 +1,10 @@
 <template>
   <header id = "header">
-   <div className="head_Home" @click="goHome">Home</div>
-        <div className="head_lecture" @click="goLecture">Lecture</div>
-        <div className="head_group" @click="goGroup">Group</div>
-        <div className="head_mypage" @click="goMyPage">Mypage</div>
-        <div className="head_chatting" @click="goChatting">Chatting</div>
+   <div className="head_Home" @click="goHome">홈</div>
+        <div className="head_lecture" @click="goLecture">강의</div>
+        <div className="head_group" @click="goGroup">그룹</div>
+        <div className="head_mypage" @click="goMyPage">프로필</div>
+        <div className="head_chatting" @click="goChatting">채팅</div>
     <!-- <b-navbar type="faded" variant="light" id="navbar">
       <b-navbar-brand @click="goHome" id="home">Home</b-navbar-brand>
       <b-navbar-nav>
@@ -63,6 +63,7 @@ header {
   align-items: center;
   border-bottom: 1px solid #e2e2e2;
   background-color: #64c964;
+  margin-bottom: 10px;
 }
 
 header > div {
@@ -75,6 +76,7 @@ header > div {
   font-size: 25px;
   cursor: pointer;
   justify-content: center;
+  
 
 }
 #home {
@@ -87,5 +89,27 @@ header > div {
   background-color: #64c964;
   font-family: 'Do Hyeon', sans-serif;
 
+}
+
+
+@media (min-width: 800px){ /*if size> 650 do*/
+  header > div{
+    font-size: 25px;
+    
+  }
+
+}
+
+@media (min-width: 1400px){ /*if size> 650 do*/
+  header > div{
+    font-size: 25px;
+  }
+
+}
+
+@media (max-width:650px){
+  header > div{
+    font-size: 19px;
+  }
 }
 </style>
