@@ -101,9 +101,9 @@ export default {
   font-size: 23px;
 }
 
-.chat__first {
+/* .chat__first {
   margin-top: 2rem;
-}
+} */
 
 .chat__yourmessage {
   display: flex;
