@@ -25,7 +25,7 @@
           <!-- 
           지난 채팅메시지 더 불러오기-->
           <div v-if="this.last === true">
-            <p> </p>
+            <p>채팅방이 생성되었습니다</p>
           </div>
 
           <chat-message
@@ -143,7 +143,13 @@ export default {
   },
   async created() {
     this.roomId = this.$route.params.roomId;
-    this.groupName = this.$route.params.groupName;
+    this.groupName = this.$route.params.groupName;  
+    if (!this.groupName ){
+      this.getGroupName()
+    }
+
+
+
 
     this.userId = sessionStorage.getItem("userId");
     if (this.$route.params.nickname) {
@@ -153,6 +159,16 @@ export default {
   },
 
   methods: {
+    getGroupName(){
+      this.$axios
+        .get(
+          // `http://localhost:8080/chat/data/get/pagesort?page=${this.page}&size=${this.size}`
+          `${HOST}/chattingRooms/${this.roomId}`
+        )
+        .then((response) => {
+          this.groupName = response.data.groupName;
+        })
+    },
     scrollDown() {
       // 스크롤 아래로 (부드럽게)
       setTimeout(() => {
