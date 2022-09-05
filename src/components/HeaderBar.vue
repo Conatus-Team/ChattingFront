@@ -90,4 +90,26 @@ header > div {
   font-family: 'Do Hyeon', sans-serif;
 
 }
+
+
+@media (min-width: 800px){ /*if size> 650 do*/
+  header > div{
+    font-size: 25px;
+    
+  }
+
+}
+
+@media (min-width: 1400px){ /*if size> 650 do*/
+  header > div{
+    font-size: 25px;
+  }
+
+}
+
+@media (max-width:650px){
+  header > div{
+    font-size: 19px;
+  }
+}
 </style>
