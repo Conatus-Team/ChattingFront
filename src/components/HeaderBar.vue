@@ -1,10 +1,10 @@
 <template>
   <header id = "header">
-   <div className="head_Home" @click="goHome">Home</div>
-        <div className="head_lecture" @click="goLecture">Lecture</div>
-        <div className="head_group" @click="goGroup">Group</div>
-        <div className="head_mypage" @click="goMyPage">Mypage</div>
-        <div className="head_chatting" @click="goChatting">Chatting</div>
+   <div className="head_Home" @click="goHome">홈</div>
+        <div className="head_lecture" @click="goLecture">강의</div>
+        <div className="head_group" @click="goGroup">그룹</div>
+        <div className="head_mypage" @click="goMyPage">프로필</div>
+        <div className="head_chatting" @click="goChatting">채팅</div>
     <!-- <b-navbar type="faded" variant="light" id="navbar">
       <b-navbar-brand @click="goHome" id="home">Home</b-navbar-brand>
       <b-navbar-nav>
