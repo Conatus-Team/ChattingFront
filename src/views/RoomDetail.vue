@@ -397,7 +397,7 @@ li {
   justify-content: space-between;
 
   /* max-width: 375px; */
-  height: 45rem;
+  height: 375px;
   background-color: #ffffff;
   /* margin: 5rem auto 0rem; */
   border-radius: 1.5rem;
@@ -466,28 +466,38 @@ svg:hover {
 .my-container{
   margin: auto;
 }
+
+/* 탭 */
 @media (min-width: 800px){ /*if size> 650 do*/
   .my-container{
     width:800px;
     
   }
   .chat{
-    height: 600px
+    height: 90vh;
   }
 }
 
+/* 웹 */
 @media (min-width: 1400px){ /*if size> 650 do*/
   .my-container{
     width:1350px;
   }
   .chat{
-    height: 700px
+    height: 90vh;
   }
 }
 
+/* 모바일 */
 @media (max-width:650px){
+  .app{
+    width:100vw;
+  }
   .my-container{
     width:90vw;
+  }
+  .chat{
+    height: 90vh;
   }
 }
 </style>
