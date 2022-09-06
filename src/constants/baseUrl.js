@@ -1,9 +1,10 @@
 export const BASE_URL = {
-    this: "http://localhost:3000",
-    chatting: "http://112.149.179.238:8081",
-    lecture: "http://localhost:8082",
-    group: "http://localhost:8083",
-    auth: "http://localhost:8084",
-    mypage: "http://localhost:8085",
-    recommend: "http://localhost:8086",
+    this: "chatting-frontend-svc.moine.svc.cluster.local",
+    chatting: "chatting-backend-svc.moine.svc.cluster.local",
+    lecture: "lecture-backend-svc.moine.svc.cluster.local",
+    group: "group-backend-svc.moine.svc.cluster.local",
+    auth: "auth-backend-service.moine.svc.cluster.local",
+    // mypage: "http://lecture-backend-svc.moine.svc.cluster.local",
+    recommend: "recommend-backend-svc.moine.svc.cluster.local",
+    react: "moine-frontend-svc.moine.svc.cluster.local"
   };
